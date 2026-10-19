@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Levi | WhatsApp Bot Platform</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<style>
+:root{--bg:#05070d;--panel:#0b1120;--line:#1a2744;--blue:#1e90ff;--cyan:#00e5ff;--text:#e8f2ff;--muted:#7a90b5;--green:#2ecc71;--red:#ff4d6d}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Tahoma,sans-serif;min-height:100vh;overflow-x:hidden}
+#particles-js{position:fixed;width:100%;height:100%;top:0;left:0;z-index:-1;background:radial-gradient(ellipse at 50% -10%,#0a1832 0,transparent 50%)}
+button,input,select,textarea{font:inherit;font-family:inherit;outline:none}
+button{cursor:pointer;border:0;color:white;transition:all .3s ease}
+button:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,229,255,0.4)}
+.hidden{display:none!important}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:18px;position:relative;z-index:1}
+.login-box{background:rgba(11,17,32,0.85);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:24px;padding:38px 32px;width:100%;max-width:420px;box-shadow:0 0 40px rgba(30,144,255,.2);animation:fadeInDown 1s ease-in-out}
+.login-box h1{text-align:center;font-size:32px;margin-bottom:6px;background:linear-gradient(90deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800}
+.login-box .sub{text-align:center;color:var(--muted);margin-bottom:28px;font-size:13px}
+.logo-img{width:80px;height:80px;margin:0 auto 15px;display:block;border-radius:50%;border:2px solid var(--cyan);box-shadow:0 0 20px var(--cyan);animation:pulse 2s infinite}
+.field{display:grid;gap:8px;margin:15px 0}
+.field label{color:#a8c0e0;font-size:13px;font-weight:500}
+.field input,.field textarea{width:100%;padding:13px 15px;border-radius:12px;background:#070c18;border:1px solid #1e2d4d;color:white;transition:0.3s}
+.field input:focus{border-color:var(--cyan);box-shadow:0 0 10px rgba(0,229,255,0.3)}
+.primary{background:linear-gradient(110deg,#1e90ff,#00bfff);border-radius:12px;padding:14px 20px;width:100%;font-weight:700;font-size:15px;position:relative;overflow:hidden}
+.primary::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);transition:0.5s}
+.primary:hover::after{left:100%}
+.secondary{background:#0f1830;border:1px solid #1e2d4d;border-radius:12px;padding:12px 16px;color:#a8c0e0}
+.layout{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+aside{background:linear-gradient(180deg,#070c18,#050810);border-left:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column;gap:20px;position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:12px;padding:8px 4px 22px;border-bottom:1px solid #14213d;animation:fadeInRight 1s}
+.brand .logo{width:40px;height:40px;border-radius:50%;border:2px solid var(--cyan);box-shadow:0 0 10px var(--cyan)}
+.brand strong{font-size:22px;font-weight:800;background:linear-gradient(90deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+nav{display:grid;gap:6px}
+nav button{background:transparent;text-align:right;padding:13px 16px;border-radius:12px;color:#8aa3c8;border:1px solid transparent;transition:0.3s}
+nav button.active,nav button:hover{background:linear-gradient(100deg,rgba(30,144,255,.15),rgba(0,191,255,.08));border-color:rgba(30,144,255,.5);color:var(--cyan);transform:translateX(-5px)}
+.topbar{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(5,8,16,.85);backdrop-filter:blur(10px);position:relative;z-index:1}
+.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),var(--cyan));font-size:20px;box-shadow:0 0 15px var(--cyan)}
+.content{padding:28px;max-width:1300px;margin:auto;position:relative;z-index:1}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;margin:26px 0 16px}
+.sectionhead h2{font-size:22px}
+.card{background:rgba(11,17,32,0.7);backdrop-filter:blur(5px);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,0.5);animation:fadeInUp 0.8s ease-out}
+.bot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px;border:1px solid #1a2744;border-radius:14px;margin-bottom:10px;background:#070c18;transition:0.3s}
+.bot:hover{border-color:var(--cyan);box-shadow:0 0 15px rgba(0,229,255,0.2);transform:scale(1.01)}
+.botname{font-weight:700;font-size:16px;color:var(--cyan)}
+.botmeta{font-size:12px;color:var(--muted);margin-top:6px}
+.smallbtn{background:#0f1830;border:1px solid #1e2d4d;border-radius:8px;padding:8px 12px;font-size:12px;color:#a8c0e0;transition:0.3s}
+.smallbtn:hover{background:var(--line);color:white}
+.smallbtn.green{color:#7dffb0;border-color:rgba(46,204,113,.3)}
+.smallbtn.danger{color:#ff8fa3;border-color:rgba(255,77,109,.3)}
+.page{display:none}.page.active{display:block;animation:fadeIn 0.5s}
+@keyframes pulse{0%{transform:scale(1);box-shadow:0 0 10px var(--cyan)}50%{transform:scale(1.05);box-shadow:0 0 25px var(--cyan)}100%{transform:scale(1);box-shadow:0 0 10px var(--cyan)}}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInRight{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media(max-width:800px){.layout{grid-template-columns:1fr}aside{flex-direction:row;flex-wrap:wrap}nav{display:flex;overflow-x:auto;width:100%}}
+</style>
+</head>
+<body>
+<div id="particles-js"></div><div id="loginScreen" class="login-wrap">
+  <div class="login-box">
+    <img src="/images/bot2.png" alt="Levi Logo" class="logo-img">
+    <h1>⚡ LEVI</h1>
+    <p class="sub">منصة إدارة بوتات واتساب</p>
+    <div id="loginView">
+      <div class="field"><label>👤 اسم المستخدم</label><input id="loginUser" placeholder="username"></div>
+      <div class="field"><label>🔒 كلمة المرور</label><input id="loginPass" type="password" placeholder="••••••••"></div>
+      <button class="primary" onclick="doLogin()">🚀 تسجيل الدخول</button>
+      <button class="secondary" style="width:100%;margin-top:10px" onclick="showRegister()">✨ إنشاء حساب جديد</button>
+      <div id="loginError" style="color:var(--red);text-align:center;margin-top:10px"></div>
+    </div>
+    <div id="registerView" style="display:none">
+      <div class="field"><label>👤 اسم المستخدم</label><input id="regUser" placeholder="حروف إنجليزية وأرقام"></div>
+      <div class="field"><label>🔒 كلمة المرور</label><input id="regPass" type="password" placeholder="6 أحرف على الأقل"></div>
+      <button class="primary" onclick="doRegister()">✨ إنشاء الحساب</button>
+      <button class="secondary" style="width:100%;margin-top:10px" onclick="hideRegister()">← رجوع</button>
+      <div id="regError" style="color:var(--red);text-align:center;margin-top:10px"></div>
+    </div>
+  </div>
+</div>
+
+<div id="mainApp" class="layout hidden">
+  <aside>
+    <div class="brand"><img src="/images/bot2.png" class="logo" alt="Logo"><div><strong>LEVI</strong><small>BOT PLATFORM</small></div></div>
+    <nav id="nav">
+      <button class="active" data-page="home">🏠 الرئيسية</button>
+      <button data-page="bots">🤖 بوتاتي</button>
+      <button data-page="create">➕ إنشاء بوت</button>
+      <button data-page="files" id="navFiles" style="display:none">📁 الملفات</button>
+      <button data-page="users" id="navUsers" style="display:none">👥 المستخدمون</button>
+      <button data-page="ai" id="navAI" style="display:none">🤖 الذكاء الاصطناعي</button>
+    </nav>
+    <div style="margin-top:auto"><button class="secondary" style="width:100%" onclick="doLogout()">🚪 تسجيل الخروج</button></div>
+  </aside>
+  <main>
+    <header class="topbar">
+      <span style="color:var(--muted)">لوحة التحكم / <b id="crumb" style="color:var(--cyan)">الرئيسية</b> <span style="font-size:12px">(Levi by Ahmed Mobark)</span></span>
+      <div class="user"><div class="avatar">⚡</div><div><b id="currentUser" style="color:var(--cyan)">-</b></div></div>
+    </header>
+    <div class="content">
+      <section class="page active" id="home">
+        <div class="card" style="margin-top:20px; animation-delay:0.1s">
+          <h3 style="color:var(--cyan);margin-bottom:12px">👑 بيانات المطور</h3>
+          <div style="color:var(--muted);line-height:2">
+            <div>👤 الاسم: <b style="color:var(--text)">Ahmed Mobark</b></div>
+            <div>📱 الرقم: <b style="color:var(--text)">201287881592</b></div>
+            <div>💬 تليجرام: <a href="https://t.me/ahmedmohmedmobark" target="_blank" style="color:var(--cyan)">@ahmedmohmedmobark</a></div>
+            <div>📢 قناة الواتساب: <a href="https://whatsapp.com/channel/0029Vb7Tdre8qJ01I3DioT01" target="_blank" style="color:var(--cyan)">اضغط هنا</a></div>
+            <div>📢 قناة التليجرام: <a href="https://t.me/SE_EH0" target="_blank" style="color:var(--cyan)">اضغط هنا</a></div>
+          </div>
+        </div>
+      </section>
+      <section class="page" id="bots">
+        <div class="sectionhead"><h2>بوتاتي</h2><button class="primary" style="width:auto;padding:10px 20px" onclick="showPage('create')">➕ إضافة بوت</button></div>
+        <div class="card" style="animation-delay:0.2s"><div id="botList"><div style="color:var(--muted);text-align:center">جاري التحميل...</div></div></div>
+      </section>
+      <section class="page" id="create">
+        <div class="sectionhead"><h2>إنشاء بوت جديد</h2></div>
+        <div class="card" style="max-width:620px; animation-delay:0.3s">
+          <div class="field"><label>📱 رقم واتساب (دولي)</label><input id="botPhone" placeholder="2010xxxxxxxx"></div>
+          <div class="field"><label>🔗 طريقة الربط</label><select id="botMethod"><option value="code">🔢 كود الاقتران</option><option value="qr">📷 رمز QR</option></select></div>
+          <button class="primary" onclick="createBot()">✨ إنشاء البوت</button>
+          <div id="createError" style="color:var(--red);text-align:center;margin-top:10px"></div>
+        </div>
+      </section>
+      <section class="page" id="files">
+        <div class="sectionhead"><h2>📁 مدير الملفات</h2></div>
+        <div class="card" style="margin-bottom:20px; animation-delay:0.4s">
+          <div class="field"><label>المجلد</label>
+            <select id="fileFolder" onchange="loadFiles()">
+              <option value="plugins">plugins (الأوامر)</option>
+              <option value="core">core (النواة)</option>
+              <option value="public">public (الواجهة)</option>
+            </select>
+          </div>
+          <div class="field"><label>اسم الملف الجديد</label><input id="newFileName" placeholder="مثال: menu.js"></div>
+          <button class="primary" onclick="createNewFile()">➕ إنشاء ملف جديد</button>
+        </div>
+        <div class="card" style="animation-delay:0.5s">
+          <div id="fileList"><div style="color:var(--muted);text-align:center">جاري التحميل...</div></div>
+        </div>
+      </section>
+      <section class="page" id="users">
+        <div class="sectionhead"><h2>👥 المستخدمون</h2></div>
+        <div class="card" style="animation-delay:0.7s"><div id="userList"><div style="text-align:center;color:var(--muted)">جاري التحميل...</div></div></div>
+      </section>
+      <section class="page" id="ai">
+        <div class="sectionhead"><h2>🤖 الذكاء الاصطناعي</h2></div>
+        <div class="card" style="animation-delay:0.8s">
+          <div id="chatBox" style="height:300px; overflow-y:auto; background:#070c18; border-radius:10px; padding:15px; margin-bottom:15px;">
+            <p style="color:var(--muted); text-align:center;">أهلاً بك! أنا المساعد الذكي لمنصة Levi. كيف أقدر أساعدك؟</p>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <input id="chatInput" placeholder="اكتب مشكلتك أو سؤالك هنا..." style="flex:1; padding:10px; border-radius:10px; background:#0f1830; border:1px solid #1e2d4d; color:white;">
+            <button class="primary" style="width:100px;" onclick="sendToAI()">إرسال</button>
+          </div>
+        </div>
+      </section>
+      <div class="footer" style="text-align:center;color:var(--muted);font-size:12px;padding:30px">⚡ Levi © 2026 — تطوير Ahmed Mobark</div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+particlesJS("particles-js", {
+  "particles": {
+    "number": {"value": 60, "density": {"enable": true, "value_area": 800}},
+    "color": {"value": "#00e5ff"},
+    "shape": {"type": "circle"},
+    "opacity": {"value": 0.5, "random": true},
+    "size": {"value": 3, "random": true},
+    "line_linked": {"enable": true, "distance": 150, "color": "#1e90ff", "opacity": 0.4, "width": 1},
+    "move": {"enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false}
+  },
+  "interactivity": {
+    "detect_on": "canvas",
+    "events": {"onhover": {"enable": true, "mode": "grab"}, "onclick": {"enable": true, "mode": "push"}},
+    "modes": {"grab": {"distance": 140, "line_linked": {"opacity": 1}}, "push": {"particles_nb": 4}}
+  },
+  "retina_detect": true
+});
+</script>
