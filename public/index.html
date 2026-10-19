@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Levi | WhatsApp Bot Platform</title>
+<style>
+:root{--bg:#05070d;--panel:#0b1120;--line:#1a2744;--blue:#1e90ff;--cyan:#00e5ff;--text:#e8f2ff;--muted:#7a90b5;--green:#2ecc71;--red:#ff4d6d}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(ellipse at 50% -10%,#0a1832 0,transparent 50%),var(--bg);color:var(--text);font-family:'Segoe UI',Tahoma,sans-serif;min-height:100vh}
+button,input,select{font:inherit;font-family:inherit;outline:none}
+button{cursor:pointer;border:0;color:white;transition:all .2s}
+.hidden{display:none!important}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:18px}
+.login-box{background:linear-gradient(145deg,#0b1120,#050a15);border:1px solid var(--line);border-radius:24px;padding:38px 32px;width:100%;max-width:420px}
+.login-box h1{text-align:center;font-size:32px;margin-bottom:6px;background:linear-gradient(90deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800}
+.login-box .sub{text-align:center;color:var(--muted);margin-bottom:28px;font-size:13px}
+.field{display:grid;gap:8px;margin:15px 0}
+.field label{color:#a8c0e0;font-size:13px;font-weight:500}
+.field input, .field textarea{width:100%;padding:13px 15px;border-radius:12px;background:#070c18;border:1px solid #1e2d4d;color:white}
+.field textarea{resize:vertical;min-height:100px;font-family:monospace;direction:ltr;text-align:left}
+.primary{background:linear-gradient(110deg,#1e90ff,#00bfff);border-radius:12px;padding:14px 20px;width:100%;font-weight:700;font-size:15px}
+.secondary{background:#0f1830;border:1px solid #1e2d4d;border-radius:12px;padding:12px 16px;color:#a8c0e0}
+.layout{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+aside{background:linear-gradient(180deg,#070c18,#050810);border-left:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column;gap:20px}
+.brand{display:flex;align-items:center;gap:12px;padding:8px 4px 22px;border-bottom:1px solid #14213d}
+.brand .logo{font-size:36px;color:var(--blue);filter:drop-shadow(0 0 12px var(--blue))}
+.brand strong{font-size:22px;font-weight:800;background:linear-gradient(90deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+nav{display:grid;gap:6px}
+nav button{background:transparent;text-align:right;padding:13px 16px;border-radius:12px;color:#8aa3c8;border:1px solid transparent}
+nav button.active,nav button:hover{background:linear-gradient(100deg,rgba(30,144,255,.15),rgba(0,191,255,.08));border-color:rgba(30,144,255,.5);color:var(--cyan)}
+.topbar{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(5,8,16,.85)}
+.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),var(--cyan));font-size:20px}
+.content{padding:28px;max-width:1300px;margin:auto}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;margin:26px 0 16px}
+.sectionhead h2{font-size:22px}
+.card{background:linear-gradient(145deg,#0b1120,#070c18);border:1px solid var(--line);border-radius:18px;padding:22px}
+.bot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px;border:1px solid #1a2744;border-radius:14px;margin-bottom:10px;background:#070c18}
+.botname{font-weight:700;font-size:16px;color:var(--cyan)}
+.botmeta{font-size:12px;color:var(--muted);margin-top:6px}
+.smallbtn{background:#0f1830;border:1px solid #1e2d4d;border-radius:8px;padding:8px 12px;font-size:12px;color:#a8c0e0}
+.smallbtn.green{color:#7dffb0;border-color:rgba(46,204,113,.3)}
+.smallbtn.danger{color:#ff8fa3;border-color:rgba(255,77,109,.3)}
+.page{display:none}.page.active{display:block}
+@media(max-width:800px){.layout{grid-template-columns:1fr}aside{flex-direction:row;flex-wrap:wrap}nav{display:flex;overflow-x:auto;width:100%}}
+</style>
+</head>
+<body>
+
+<div id="loginScreen" class="login-wrap">
+  <div class="login-box">
+    <h1>⚡ Levi</h1>
+    <p class="sub">منصة إدارة بوتات واتساب</p>
+    <div id="loginView">
+      <div class="field"><label>👤 اسم المستخدم</label><input id="loginUser" placeholder="username"></div>
+      <div class="field"><label>🔒 كلمة المرور</label><input id="loginPass" type="password" placeholder="••••••••"></div>
+      <button class="primary" onclick="doLogin()">🚀 تسجيل الدخول</button>
+      <button class="secondary" style="width:100%;margin-top:10px" onclick="showRegister()">✨ إنشاء حساب جديد</button>
+      <div id="loginError" style="color:var(--red);text-align:center;margin-top:10px"></div>
+    </div>
+    <div id="registerView" style="display:none">
+      <div class="field"><label>👤 اسم المستخدم</label><input id="regUser" placeholder="حروف إنجليزية وأرقام"></div>
+      <div class="field"><label>🔒 كلمة المرور</label><input id="regPass" type="password" placeholder="6 أحرف على الأقل"></div>
+      <button class="primary" onclick="doRegister()">✨ إنشاء الحساب</button>
+      <button class="secondary" style="width:100%;margin-top:10px" onclick="hideRegister()">← رجوع</button>
+      <div id="regError" style="color:var(--red);text-align:center;margin-top:10px"></div>
+    </div>
+  </div>
+</div>
+
+<div id="mainApp" class="layout hidden">
+  <aside>
+    <div class="brand"><div class="logo">⚡</div><div><strong>Levi</strong><small>BOT PLATFORM</small></div></div>
+    <nav id="nav">
+      <button class="active" data-page="home">🏠 الرئيسية</button>
+      <button data-page="bots">🤖 بوتاتي</button>
+      <button data-page="create">➕ إنشاء بوت</button>
+      <button data-page="plugins" id="navPlugins" style="display:none">📁 إدارة الأوامر</button>
+      <button data-page="ai">🧠 مساعد المنصة</button>
+      
+      <button data-page="public-chat">🌍 الشات العام</button>
+      <button data-page="private-chat" id="navPrivateChat" style="display:none">👑 شات المطورين</button>
+
+      <button data-page="users" id="navUsers" style="display:none">👥 المستخدمون</button>
+    </nav>
+    <div style="margin-top:auto"><button class="secondary" style="width:100%" onclick="doLogout()">🚪 تسجيل الخروج</button></div>
+  </aside>
+  <main>
+    <header class="topbar">
+      <span style="color:var(--muted)">لوحة التحكم / <b id="crumb" style="color:var(--cyan)">الرئيسية</b></span>
+      <div class="user"><div class="avatar">⚡</div><div><b id="currentUser" style="color:var(--cyan)">-</b></div></div>
+    </header>
+    <div class="content">
+      <section class="page active" id="home">
+        <div class="card" style="margin-top:20px">
+          <h3 style="color:var(--cyan);margin-bottom:12px">👑 بيانات المطور</h3>
+          <div style="color:var(--muted);line-height:2">
+            <div>👤 الاسم: <b style="color:var(--text)">Ahmed Mobark</b></div>
+            <div>📱 الرقم: <b style="color:var(--text)">+20 12 87881592</b></div>
+            <div>💬 تليجرام: <a href="https://t.me/ahmedmohmedmobark" target="_blank" style="color:var(--cyan)">@ahmedmohmedmobark</a></div>
+            <div>📢 قناة الواتساب: <a href="https://whatsapp.com/channel/0029Vb7Tdre8qJ01I3DioT01" target="_blank" style="color:var(--cyan)">Levi</a></div>
+            <div>📢 قناة التليجرام: <a href="https://t.me/se_eh0" target="_blank" style="color:var(--cyan)">قناة التليجرام</a></div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="page" id="bots">
+        <div class="sectionhead"><h2>بوتاتي</h2><button class="primary" style="width:auto;padding:10px 20px" onclick="showPage('create')">➕ إضافة بوت</button></div>
+        <div class="card"><div id="botList"><div style="color:var(--muted);text-align:center">جاري التحميل...</div></div></div>
+      </section>
+
+      <section class="page" id="create">
+        <div class="sectionhead"><h2>إنشاء بوت جديد</h2></div>
+        <div class="card" style="max-width:620px">
+          <div class="field"><label>📱 رقم واتساب (دولي)</label><input id="botPhone" placeholder="2010xxxxxxxx"></div>
+          <div class="field"><label>🔗 طريقة الربط</label><select id="botMethod"><option value="code">🔢 كود الاقتران</option><option value="qr">📷 رمز QR</option></select></div>
+          <button class="primary" onclick="createBot()">✨ إنشاء البوت</button>
+          <div id="createError" style="color:var(--red);text-align:center;margin-top:10px"></div>
+        </div>
+      </section>
+
+      <section class="page" id="qrPage">
+        <div class="sectionhead"><h2>ربط البوت</h2></div>
+        <div class="card" style="text-align:center; max-width:500px; margin:auto;">
+          <div id="qrContent"><p style="color:var(--muted)">جاري التحميل...</p></div>
+          <button class="secondary" style="margin-top:20px" onclick="showPage('bots')">← رجوع</button>
+        </div>
+      </section>
+
+      <!-- صفحة إدارة الأوامر (للمطور) -->
+      <section class="page" id="plugins">
+        <div class="sectionhead"><h2>📁 إدارة أوامر البوت</h2></div>
+        
+        
+        <div class="card" style="margin-bottom:20px; border-color:rgba(46,204,113,0.3)">
+          <h3 style="color:#2ecc71;margin-bottom:15px">📝 إنشاء ملف أوامر جديد</h3>
+          <div class="field"><label>اسم الملف (بدون .js)</label><input id="newFileName" placeholder="مثال: my_commands"></div>
+          <div class="field"><label>نوع الملف</label>
+            <select id="newFileType">
+              <option value="single">ملف أمر مفرد (Single Command)</option>
+              <option value="multi">ملف تجميعي (Multi Commands)</option>
+            </select>
+          </div>
+          <button class="primary" style="background:linear-gradient(110deg,#2ecc71,#27ae60)" onclick="createNewFile()">➕ إنشاء الملف</button>
+          <div id="createFileMsg" style="text-align:center;margin-top:10px"></div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px; border-color:rgba(0,229,255,0.3)">
+          <h3 style="color:var(--cyan);margin-bottom:15px">📤 رفع ملف أمر جديد (.js)</h3>
+          
+          <div class="field"><label>اختر الملف</label><input type="file" id="uploadFile" accept=".js" style="padding:10px; background:#0f1830"></div>
+          <button class="primary" onclick="uploadPlugin()">⬆️ رفع الملف</button>
+          <div id="uploadMsg" style="text-align:center;margin-top:10px"></div>
+        </div>
+      
+        <!-- جدول الملفات -->
+        <div class="card" style="margin-top:20px;">
+          <h3 style="color:var(--cyan);margin-bottom:15px">📂 الملفات الموجودة حالياً</h3>
+          <div class="table-wrap">
+            <table id="filesTable" style="width:100%; text-align:right; border-collapse:collapse;">
+              <thead>
+                <tr style="border-bottom:1px solid #1e2d4d;">
+                  <th style="padding:10px;">اسم الملف</th>
+                  <th style="padding:10px;">الحجم</th>
+                  <th style="padding:10px;">الإجراء</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="3" style="text-align:center;color:var(--muted);padding:20px;">جاري التحميل...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+</section>
+
+      
+      <section class="page" id="ai">
+        <div class="sectionhead"><h2>🧠 المساعد الذكي</h2></div>
+        <div class="card" style="display:flex; flex-direction:column; height:500px;">
+          <div id="chatMessages" style="flex:1; overflow-y:auto; border:1px solid #1e2d4d; border-radius:12px; padding:15px; margin-bottom:15px; background:#070c18; display:flex; flex-direction:column; gap:10px;">
+            <div style="color:var(--cyan); align-self:flex-end; background:#0f1830; padding:10px 15px; border-radius:12px; max-width:80%;">أهلاً بك! أنا مساعدك الذكي لحل مشاكل المنصة والأكواد. كيف أقدر أساعدك؟</div>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <input id="chatInput" placeholder="اكتب مشكلتك هنا..." style="flex:1; padding:12px; border-radius:12px; background:#070c18; border:1px solid #1e2d4d; color:white;" onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="primary" style="width:100px; padding:12px;" onclick="sendMessage()">إرسال</button>
+          </div>
+        </div>
+      </section>
+
+      
+      
+
+      
+      <!-- الشات العام (لكل المستخدمين) -->
+      <section class="page" id="public-chat">
+        <div class="sectionhead"><h2>🌍 الشات العام</h2></div>
+        <div class="card" style="display:flex; flex-direction:column; height:500px;">
+          <div id="publicChatBox" style="flex:1; overflow-y:auto; border:1px solid #1e2d4d; border-radius:12px; padding:15px; margin-bottom:15px; background:#070c18; display:flex; flex-direction:column; gap:10px;">
+            <div style="color:var(--muted); text-align:center;">جاري تحميل الرسائل...</div>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <input id="publicChatInput" placeholder="اكتب رسالتك هنا..." style="flex:1; padding:12px; border-radius:12px; background:#070c18; border:1px solid #1e2d4d; color:white;" onkeypress="if(event.key==='Enter') sendPublicMessage()">
+            <button class="primary" style="width:100px; padding:12px;" onclick="sendPublicMessage()">إرسال</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- شات المطورين (للأدمن فقط) -->
+      <section class="page" id="private-chat">
+        <div class="sectionhead"><h2>👑 شات المطورين</h2></div>
+        <div class="card" style="display:flex; flex-direction:column; height:500px;">
+          <div id="privateChatBox" style="flex:1; overflow-y:auto; border:1px solid #1e2d4d; border-radius:12px; padding:15px; margin-bottom:15px; background:#070c18; display:flex; flex-direction:column; gap:10px;">
+            <div style="color:var(--muted); text-align:center;">جاري تحميل الرسائل...</div>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <input id="privateChatInput" placeholder="اكتب رسالتك هنا..." style="flex:1; padding:12px; border-radius:12px; background:#070c18; border:1px solid #1e2d4d; color:white;" onkeypress="if(event.key==='Enter') sendPrivateMessage()">
+            <button class="primary" style="width:100px; padding:12px;" onclick="sendPrivateMessage()">إرسال</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="users">
+        <div class="sectionhead"><h2>👥 المستخدمون</h2></div>
+        <div class="card"><div id="userList"><div style="text-align:center;color:var(--muted)">جاري التحميل...</div></div></div>
+      </section>
+      
+      <div class="footer" style="text-align:center;color:var(--muted);font-size:12px;padding:30px">⚡ Levi © 2026 — تطوير Ahmed Mobark</div>
+    </div>
+  </main>
+</div>
+
+<script>
+let token = localStorage.getItem('token') || '';
+let currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+let currentBots = [];
+const labels = {home:'الرئيسية', bots:'بوتاتي', create:'إنشاء بوت', users:'المستخدمون', qrPage:'ربط البوت', plugins:'إدارة الأوامر'};
+
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(x => x.classList.toggle('active', x.id === p));
+  document.querySelectorAll('nav button').forEach(x => x.classList.toggle('active', x.dataset.page === p));
+  document.getElementById('crumb').textContent = labels[p] || p;
+  if (p === 'bots') loadBots();
+  if (p === 'users') loadUsers();
+  if (p === 'plugins') loadPluginFiles();
+  if (p === 'plugins') loadPluginFiles();
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => showPage(b.dataset.page)));
+
+async function api(path, opts = {}) {
+  const headers = Object.assign({'Content-Type': 'application/json'}, opts.headers || {});
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  const r = await fetch(path, Object.assign({}, opts, {headers}));
+  if (r.status === 401) { doLogout(); throw new Error('انتهت الجلسة'); }
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.error || ('خطأ ' + r.status));
+  return data;
+}
+
+function showRegister() { document.getElementById('loginView').style.display = 'none'; document.getElementById('registerView').style.display = 'block'; }
+function hideRegister() { document.getElementById('loginView').style.display = 'block'; document.getElementById('registerView').style.display = 'none'; }
+
+async function doLogin() {
+  const username = document.getElementById('loginUser').value.trim(), password = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginError'); err.textContent = '';
+  if (!username || !password) { err.textContent = 'اكتب البيانات'; return; }
+  try {
+    const r = await fetch('/api/auth/login', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username, password})});
+    const data = await r.json(); if (!r.ok) throw new Error(data.error);
+    token = data.token; currentUser = data.user; localStorage.setItem('token', token); localStorage.setItem('user', JSON.stringify(currentUser)); showApp();
+  } catch (e) { err.textContent = e.message; }
+}
+
+async function doRegister() {
+  const u = document.getElementById('regUser').value.trim().toLowerCase(), p = document.getElementById('regPass').value;
+  const err = document.getElementById('regError'); err.textContent = '';
+  if (!u || !p) { err.textContent = 'اكتب البيانات'; return; }
+  try {
+    const r = await fetch('/api/auth/register', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username: u, password: p})});
+    const data = await r.json(); if (!r.ok) throw new Error(data.error);
+    token = data.token; currentUser = data.user; localStorage.setItem('token', token); localStorage.setItem('user', JSON.stringify(currentUser)); showApp();
+  } catch (e) { err.textContent = e.message; }
+}
+
+function doLogout() {
+  localStorage.removeItem('token'); localStorage.removeItem('user');
+  token = ''; currentUser = null;
+  document.getElementById('mainApp').classList.add('hidden'); document.getElementById('loginScreen').classList.remove('hidden'); hideRegister();
+}
+
+function showApp() {
+  document.getElementById('loginScreen').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden');
+  document.getElementById('currentUser').textContent = currentUser.username + (currentUser.role === 'admin' ? ' 👑' : '');
+  
+  if (currentUser.role === 'admin') { 
+    document.getElementById('navUsers').style.display = ''; 
+    document.getElementById('navPlugins').style.display = ''; 
+    // نظهر شات المطورين للأدمن
+    const chatBtn = document.getElementById('navGroupChat');
+    if (chatBtn) chatBtn.style.display = '';
+  }
+
+  loadBots();
+}
+
+async function loadBots() {
+  const box = document.getElementById('botList'); if (!box) return;
+  box.innerHTML = '<div style="color:var(--muted);text-align:center">جاري التحميل...</div>';
+  try { const data = await api('/api/bots'); currentBots = data.bots || []; renderBots(); } catch (e) { box.innerHTML = '<div style="color:var(--red)">' + e.message + '</div>'; }
+}
+
+function renderBots() {
+  const box = document.getElementById('botList');
+  if (!currentBots.length) { box.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px">لا توجد بوتات بعد.</div>'; return; }
+  box.innerHTML = currentBots.map(b => {
+    let statusText = 'غير متصل ❌', statusColor = 'var(--red)';
+    if (b.status === 'connected') { statusText = 'متصل ✅'; statusColor = 'var(--green)'; } 
+    else if (b.status === 'connecting' || b.status === 'qr' || b.status === 'code') { statusText = 'جاري الربط... ⏳'; statusColor = 'var(--cyan)'; }
+    return `
+      <div class="bot">
+        <div>
+          <div class="botname">⚡ ${b.name}</div>
+          <div class="botmeta">${b.phone || 'بدون رقم'}</div>
+          <div style="margin-top:10px">
+            <button class="smallbtn green" onclick="connectBot(${b.id})">🔗 ربط</button>
+            <button class="smallbtn danger" onclick="removeBot(${b.id})">🗑 حذف</button>
+          </div>
+        </div>
+        <div style="color:${statusColor}; font-weight:bold; font-size:14px; padding:5px 10px; border:1px solid ${statusColor}; border-radius:8px; background:rgba(0,0,0,0.2)">${statusText}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function createBot() {
+  const phone = document.getElementById('botPhone').value.trim(), method = document.getElementById('botMethod').value;
+  const err = document.getElementById('createError'); err.textContent = '';
+  if (!phone) { err.textContent = 'اكتب رقم الواتساب'; return; }
+  try { await api('/api/bots', {method: 'POST', body: JSON.stringify({name: 'Levi', phone, method})}); document.getElementById('botPhone').value = ''; showPage('bots'); } catch (e) { err.textContent = e.message; }
+}
+
+async function connectBot(id) {
+  showPage('qrPage');
+  document.getElementById('qrContent').innerHTML = '<p style="color:var(--muted)">جاري بدء الاتصال...</p>';
+  try {
+    const data = await api('/api/bots/' + id + '/connect', {method:'POST'});
+    const c = data.connection;
+    if (c.qr) {
+      document.getElementById('qrContent').innerHTML = '<p style="color:var(--muted);margin-bottom:15px">امسح الكود من واتساب</p><img src="' + c.qr + '" style="width:100%;max-width:250px;background:white;padding:10px;border-radius:10px;">';
+    } else if (c.pairingCode) {
+      document.getElementById('qrContent').innerHTML = '<p style="color:var(--muted);margin-bottom:15px">أدخل الكود في واتساب</p><div style="font-size:32px;letter-spacing:8px;color:var(--cyan);font-family:monospace;padding:20px;background:#070c18;border-radius:10px;">' + c.pairingCode + '</div>';
+    } else {
+      document.getElementById('qrContent').innerHTML = '<p style="color:var(--red)">' + (c.message || 'خطأ') + '</p>';
+    }
+  } catch(e) {
+    document.getElementById('qrContent').innerHTML = '<p style="color:var(--red)">خطأ: ' + e.message + '</p>';
+  }
+}
+
+async function removeBot(id) {
+  if (!confirm('حذف البوت؟')) return;
+  try { await api('/api/bots/' + id, {method:'DELETE'}); loadBots(); } catch(e) { alert(e.message); }
+}
+
+
+async function loadUsers() {
+  const box = document.getElementById('userList'); if (!box) return;
+  box.innerHTML = '<div style="color:var(--muted);text-align:center">جاري التحميل...</div>';
+  try {
+    const data = await api('/api/admin/users'); const users = data.users || [];
+    box.innerHTML = users.map(u => {
+      const isAdmin = u.role === 'admin';
+      const isMe = u.username === currentUser.username;
+      return \`
+      <div class="bot" style="display:flex; justify-content:space-between; align-items:center; padding:15px; border-bottom:1px solid #1e2d4d;">
+        <div>
+          <div class="botname">👤 \${u.username} \${isAdmin ? '👑' : ''}</div>
+          <div class="botmeta" style="font-size:12px; color:var(--muted)">تاريخ التسجيل: \${new Date(u.created_at).toLocaleDateString('ar-EG')}</div>
+        </div>
+        <div>
+          \${!isMe ? (
+            isAdmin 
+            ? \`<button class="smallbtn danger" onclick="toggleRole(\${u.id}, 'user')">⬇️ إزالة الأدمن</button>\`
+            : \`<button class="smallbtn green" onclick="toggleRole(\${u.id}, 'admin')">⬆️ ترقية لأدمن</button>\`
+          ) : '<span style="color:var(--cyan); font-size:12px;">(أنت)</span>'}
+        </div>
+      </div>
+      \`;
+    }).join('');
+  } catch (e) { box.innerHTML = '<div style="color:var(--red)">' + e.message + '</div>'; }
+}
+
+async function toggleRole(id, role) {
+  try {
+    await api('/api/admin/users/' + id + '/role', { method: 'POST', body: JSON.stringify({ role }) });
+    loadUsers();
+  } catch(e) { alert(e.message); }
+}
+
+
+// دالة رفع الملفات
+
+async function uploadPlugin() {
+  const fileInput = document.getElementById('uploadFile');
+  const msg = document.getElementById('uploadMsg');
+  
+  if (!fileInput.files.length) return msg.innerHTML = '<span style="color:var(--red)">اختار الملف الأول</span>';
+  
+  const formData = new FormData();
+  formData.append('file', fileInput.files[0]);
+  
+  try {
+    msg.innerHTML = '<span style="color:var(--cyan)">جاري الرفع...</span>';
+    const res = await fetch('/api/plugins/upload', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      body: formData
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'فشل الرفع');
+    msg.innerHTML = '<span style="color:#00ff88">✅ تم رفع الملف بنجاح باسم: ' + data.filename + '</span>';
+    if (typeof loadPluginFiles === 'function') loadPluginFiles();
+    loadPluginFiles();
+    fileInput.value = '';
+  } catch(e) {
+    msg.innerHTML = '<span style="color:var(--red)">' + e.message + '</span>';
+  }
+}
+
+
+if (token && currentUser) { showApp(); }
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  
+  const box = document.getElementById('chatMessages');
+  box.innerHTML += `<div style="color:white; align-self:flex-start; background:linear-gradient(135deg,#1e90ff,#00bfff); padding:10px 15px; border-radius:12px; max-width:80%;">${text}</div>`;
+  input.value = '';
+  box.scrollTop = box.scrollHeight;
+
+  try {
+    const res = await fetch('/api/ai/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ message: text })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'فشل الاتصال');
+    
+    box.innerHTML += `<div style="color:var(--cyan); align-self:flex-end; background:#0f1830; padding:10px 15px; border-radius:12px; max-width:80%;">${data.reply}</div>`;
+    box.scrollTop = box.scrollHeight;
+  } catch(e) {
+    box.innerHTML += `<div style="color:var(--red); align-self:flex-end; background:#0f1830; padding:10px 15px; border-radius:12px; max-width:80%;">خطأ: ${e.message}</div>`;
+  }
+}
+
+
+
+let chatInterval;
+
+async function loadMessages(type, boxId) {
+  const box = document.getElementById(boxId);
+  if (!box) return;
+  try {
+    const res = await fetch('/api/chat/messages?type=' + type, { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    if (!res.ok) return;
+    
+    const isScrolledToBottom = box.scrollHeight - box.clientHeight <= box.scrollTop + 50;
+    box.innerHTML = data.messages.map(m => {
+      const isMe = m.username === currentUser.username;
+      return `<div style="align-self:${isMe ? 'flex-start' : 'flex-end'}; background:${isMe ? 'linear-gradient(135deg,#1e90ff,#00bfff)' : '#0f1830'}; color:${isMe ? 'white' : 'var(--cyan)'}; padding:10px 15px; border-radius:12px; max-width:80%;">
+        <div style="font-size:10px; color:rgba(255,255,255,0.6); margin-bottom:4px;">${m.username}</div>
+        ${m.message}
+      </div>`;
+    }).join('');
+    if (isScrolledToBottom) box.scrollTop = box.scrollHeight;
+  } catch(e) {}
+}
+
+async function postMessage(text, type) {
+  if (!text) return;
+  try {
+    await fetch('/api/chat/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ message: text, type: type })
+    });
+  } catch(e) { alert('فشل إرسال الرسالة'); }
+}
+
+async function sendPublicMessage() {
+  const input = document.getElementById('publicChatInput');
+  await postMessage(input.value.trim(), 'public');
+  input.value = '';
+  loadMessages('public', 'publicChatBox');
+}
+
+async function sendPrivateMessage() {
+  const input = document.getElementById('privateChatInput');
+  await postMessage(input.value.trim(), 'private');
+  input.value = '';
+  loadMessages('private', 'privateChatBox');
+}
+
+// تحديث الصفحات
+const originalShowPage = showPage;
+showPage = function(p) {
+  originalShowPage(p);
+  if (chatInterval) clearInterval(chatInterval);
+  
+  if (p === 'public-chat') {
+    loadMessages('public', 'publicChatBox');
+    chatInterval = setInterval(() => loadMessages('public', 'publicChatBox'), 3000);
+  } else if (p === 'private-chat') {
+    loadMessages('private', 'privateChatBox');
+    chatInterval = setInterval(() => loadMessages('private', 'privateChatBox'), 3000);
+  }
+};
+
+// إظهار شات المطورين للأدمن بس
+const originalShowApp = showApp;
+showApp = function() {
+  originalShowApp();
+  if (currentUser.role === 'admin') {
+    const nav = document.getElementById('navPrivateChat');
+    if(nav) nav.style.display = '';
+  }
+};
+
+async function loadPluginFiles() {
+  const tbody = document.querySelector('#filesTable tbody');
+  if (!tbody) return;
+  try {
+    const res = await fetch('/api/plugins/files', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    
+    if (!data.files.length) {
+      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:20px;">لا توجد ملفات مرفوعة بعد.</td></tr>';
+      return;
+    }
+    
+    tbody.innerHTML = data.files.map(f => `
+      <tr style="border-bottom:1px solid #1e2d4d;">
+        <td style="padding:10px; color:var(--cyan); font-weight:bold;">${f.name}</td>
+        <td style="padding:10px; color:var(--muted);">${f.size}</td>
+        <td style="padding:10px;">
+          <button class="smallbtn danger" onclick="deletePluginFile('${f.name}')">🗑️ حذف</button>
+        </td>
+      </tr>
+    `).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--red);padding:20px;">خطأ: ' + e.message + '</td></tr>';
+  }
+}
+
+async function deletePluginFile(name) {
+  if (!confirm('متأكد من حذف الملف: ' + name + '؟')) return;
+  try {
+    const res = await fetch('/api/plugins/files/' + name, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!res.ok) throw new Error('فشل الحذف');
+    loadPluginFiles();
+  } catch(e) { alert(e.message); }
+}
+
+async function createNewFile() {
+  const fileName = document.getElementById('newFileName').value.trim();
+  const type = document.getElementById('newFileType').value;
+  const msg = document.getElementById('createFileMsg');
+  
+  if (!fileName) return msg.innerHTML = '<span style="color:var(--red)">اكتب اسم الملف الأول</span>';
+  
+  try {
+    msg.innerHTML = '<span style="color:var(--cyan)">جاري الإنشاء...</span>';
+    const res = await fetch('/api/plugins/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ fileName, type })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    msg.innerHTML = '<span style="color:#00ff88">✅ تم إنشاء الملف: ' + data.filename + '</span>';
+    document.getElementById('newFileName').value = '';
+    loadPluginFiles(); // تحديث الجدول
+  } catch(e) {
+    msg.innerHTML = '<span style="color:var(--red)">' + e.message + '</span>';
+  }
+}
+
+</script>
+</body>
+</html>
