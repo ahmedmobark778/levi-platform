@@ -8,7 +8,7 @@
 3. `npm run bot` (لتشغيل البوت)
 
 ## 🌍 النشر على Render
-- Build Command: `npm install`
+- Build Command: `pm  install`
 - Start Command: `node server.js`
 - Environment Variables: `JWT_SECRET` (مطلوب)
 
