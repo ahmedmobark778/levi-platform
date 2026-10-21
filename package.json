@@ -1,0 +1,26 @@
+{
+  "name": "levi-platform",
+  "version": "3.1.0",
+  "description": "Levi WhatsApp Bot Platform",
+  "main": "server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc14",
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.3.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.4.0",
+    "node-cache": "^5.1.2",
+    "pino": "^10.4.0",
+    "qrcode": "^1.5.4"
+  }
+}
